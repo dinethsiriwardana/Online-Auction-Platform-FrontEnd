@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     return ResponsiveSizer(
       builder: (context, orientation, screenType) {
         return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Online Auction Platform',
           theme: ThemeData(
             primarySwatch: Colors.blue,

@@ -2,7 +2,10 @@ import 'dart:html';
 import 'dart:html' show window;
 
 import 'package:flutter/material.dart';
+import 'package:online_auction_platform/presentation/auth/login_screen/login_screen.dart';
 import 'package:online_auction_platform/presentation/auth/register_screen/register_screen.dart';
+import 'package:online_auction_platform/presentation/bid/add_bid_screen.dart';
+import 'package:online_auction_platform/presentation/home/home_page.dart';
 
 class LandinPage extends StatefulWidget {
   const LandinPage({super.key});
@@ -17,12 +20,12 @@ class LandinPage extends StatefulWidget {
 class _LandinPageState extends State<LandinPage> {
   @override
   Widget build(BuildContext context) {
-    if (window.localStorage["login"] == null) {
+    if (window.localStorage["token"] != null) {
       //Load Login Screen
-      return RegisterScreen();
+      return LoginScreen();
     } else {
-      //Load Home Screen
+      // return Scaffold(body: AddBidScreen());
+      return HomePage();
     }
-    return const Placeholder();
   }
 }

@@ -1,6 +1,17 @@
+import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:online_auction_platform/data/api/api.dart';
+import 'package:online_auction_platform/data/controller/login_controller.dart';
+import 'package:online_auction_platform/presentation/auth/register_screen/register_screen.dart';
+import 'package:online_auction_platform/presentation/landing_page.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:html' show window;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +21,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final LoginController loginController = Get.put(LoginController());
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -21,10 +34,37 @@ class _LoginScreenState extends State<LoginScreen> {
   String get _email => _emailController.text;
   String get _password => _passwordController.text;
 
-  final _formKey = GlobalKey<FormState>();
-
   void _submit() async {
-    try {} catch (e) {
+    final bool emailisValid = EmailValidator.validate(_email);
+    if (!emailisValid) {
+      loginController.changeResponse('Add Correct Email');
+      return;
+    }
+    try {
+      final response = await http.post(
+        Uri.parse(Api.login),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'email': _email,
+          'password': _password,
+        }),
+      );
+      if (response.statusCode == 200) {
+        Map data = jsonDecode(response.body);
+        window.localStorage["token"] = data['token'];
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) {
+            return const LandinPage();
+          },
+        ));
+      } else {
+        print('Response Status Code: ${response.body}');
+        loginController.changeResponse(jsonDecode(response.body)['message']);
+      }
+    } catch (e) {
+      loginController.changeResponse(e.toString());
       print(e.toString());
     }
   }
@@ -96,11 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextButton(
                               onPressed: () {
-                                // Navigator.of(context).push(MaterialPageRoute(
-                                //   builder: (_) {
-                                //     // return UserRegister();
-                                //   },
-                                // ));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) {
+                                    return const RegisterScreen();
+                                  },
+                                ));
                               },
                               child: Text(
                                 "No account ? Register",
