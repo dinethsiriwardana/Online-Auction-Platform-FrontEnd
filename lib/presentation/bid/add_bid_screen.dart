@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:html' as html;
+import 'dart:html' show window;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:online_auction_platform/data/api/api.dart';
-import 'package:online_auction_platform/data/controller/item_controller.dart'; // Import the intl package for date formatting
+import 'package:online_auction_platform/data/controller/item_controller.dart';
+import 'package:online_auction_platform/utl/dat_time_formatter.dart'; // Import the intl package for date formatting
 
 class AddBidScreen extends StatefulWidget {
   const AddBidScreen({Key? key});
@@ -66,12 +68,12 @@ class _AddBidScreenState extends State<AddBidScreen> {
           'Content-Type': 'application/json',
         },
         body: jsonEncode(<String, dynamic>{
-          "name": "Item Name",
-          "description": "Item description",
-          "start_price": 99.43,
-          "add_by": 1,
-          "expiredAt": "2024-05-05T10:52:47.271194",
-          "createdAt": "2024-05-05T10:52:47.271194"
+          "name": _name,
+          "description": _description,
+          "start_price": double.parse(_startPrice),
+          "add_by": window.localStorage["token"],
+          "expiredAt": _dateTimeController.text,
+          "createdAt": DayTimeFormatter().formatLocalTime(DateTime.now())
         }),
       );
       if (itemresponse.statusCode == 200) {
@@ -213,7 +215,7 @@ class _AddBidScreenState extends State<AddBidScreen> {
             if (pickedTime != null) {
               setState(() {
                 controller.text =
-                    DateFormat('yyyy-MM-dd HH:mm').format(DateTime(
+                    DateFormat('yyyy-MM-ddTHH:mm:ss.S').format(DateTime(
                   pickedDateTime.year,
                   pickedDateTime.month,
                   pickedDateTime.day,

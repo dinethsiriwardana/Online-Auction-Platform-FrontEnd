@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 class ItemData {
-  final int id;
-  final String name;
-  final String description;
-  final double startPrice;
-  final String createdAt;
-  final String expiredAt;
-  final int addedBy;
+  final int? id;
+  final String? name;
+  final String? description;
+  final double? startPrice;
+  final String? createdAt;
+  final String? expiredAt;
+  final dynamic? addedBy;
 
   ItemData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.startPrice,
-    required this.createdAt,
-    required this.expiredAt,
-    required this.addedBy,
+    this.id,
+    this.name,
+    this.description,
+    this.startPrice,
+    this.createdAt,
+    this.expiredAt,
+    this.addedBy,
   });
 
   factory ItemData.fromJson(Map<String, dynamic> json) {

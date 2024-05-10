@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 100.h,
                       width: 50.w,
-                      child: Lottie.asset('assets/lottie/login.json'),
+                      // child: Lottie.asset('assets/lottie/login.json'),
                     )
                   ],
                 ),
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'REGISTER',
+                            'Login',
                             style: TextStyle(
                                 fontSize: 16.sp, fontWeight: FontWeight.bold),
                           ),
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ))),
                               onPressed: _submit,
                               child: Text(
-                                'Register',
+                                'Login',
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),

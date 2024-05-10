@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:online_auction_platform/data/controller/item_controller.dart';
 import 'package:online_auction_platform/data/model/item_model.dart';
 import 'package:online_auction_platform/presentation/bid/add_bid_screen.dart';
+import 'package:online_auction_platform/presentation/item/single_item.dart';
 
 import 'package:online_auction_platform/presentation/landing_page.dart';
 
@@ -27,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     itemController.fetchData();
-
     super.initState();
   }
 
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               child: IconButton(
                 onPressed: () {
                   window.localStorage.remove("token");
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (_) {
                       return const LandinPage();
                     },
@@ -83,55 +83,60 @@ class _HomePageState extends State<HomePage> {
                       itemCount: itemController.items.length,
                       itemBuilder: (context, index) {
                         final item = itemController.items[index];
-                        return Container(
-                          //rounded corners
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // background img
-                            color: Colors.blue,
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                'http://localhost:8080/apis/v1/file/image/${item.id}',
-                              ),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            ),
-                          ),
-
-                          // color: Colors.blue,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                color: Color.fromARGB(227, 44, 44, 44)
-                                    .withOpacity(0.8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(item.name,
-                                            style: const TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.white)),
-                                        Text(
-                                          item.startPrice.toString(),
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white),
-                                        )
-                                      ],
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {}, child: Text("Bid"))
-                                  ],
+                        return InkWell(
+                          onTap: () {
+                            _showBidDialog(context, item.id.toString());
+                          },
+                          child: Container(
+                            //rounded corners
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              // background img
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  'http://localhost:8080/apis/v1/file/image/${item.id}',
                                 ),
-                              )
-                            ],
+                                fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
+                              ),
+                            ),
+
+                            // color: Colors.blue,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  color: Color.fromARGB(227, 44, 44, 44)
+                                      .withOpacity(0.8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(item.name ?? "",
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.white)),
+                                          Text(
+                                            item.startPrice.toString(),
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.white),
+                                          )
+                                        ],
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () {}, child: Text("Bid"))
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -147,6 +152,19 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: AddBidScreen(),
+        );
+      },
+    );
+  }
+
+  void _showBidDialog(BuildContext context, String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleItemScreen(
+            id: id,
+          ),
         );
       },
     );

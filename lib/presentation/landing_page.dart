@@ -6,6 +6,7 @@ import 'package:online_auction_platform/presentation/auth/login_screen/login_scr
 import 'package:online_auction_platform/presentation/auth/register_screen/register_screen.dart';
 import 'package:online_auction_platform/presentation/bid/add_bid_screen.dart';
 import 'package:online_auction_platform/presentation/home/home_page.dart';
+import 'package:online_auction_platform/presentation/item/single_item.dart';
 
 class LandinPage extends StatefulWidget {
   const LandinPage({super.key});
@@ -20,11 +21,14 @@ class LandinPage extends StatefulWidget {
 class _LandinPageState extends State<LandinPage> {
   @override
   Widget build(BuildContext context) {
-    if (window.localStorage["token"] != null) {
+    if (window.localStorage["token"] == null) {
       //Load Login Screen
-      return LoginScreen();
+      return const LoginScreen();
     } else {
-      // return Scaffold(body: AddBidScreen());
+      // return const Scaffold(
+      //   body: SingleItemScreen(id: '3'),
+      //   // backgroundColor: const Color.fromARGB(255, 43, 43, 43),
+      // );
       return HomePage();
     }
   }

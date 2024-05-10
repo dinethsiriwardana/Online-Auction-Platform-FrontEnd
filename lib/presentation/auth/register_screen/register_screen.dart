@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (response.statusCode == 200) {
         Map data = jsonDecode(response.body);
         window.localStorage["token"] = data['token'];
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (_) {
             return const LandinPage();
           },
@@ -113,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(
                       height: 100.h,
                       width: 50.w,
-                      child: Lottie.asset('assets/lottie/login.json'),
+                      // child: Lottie.asset('assets/lottie/login.json'),
                     )
                   ],
                 ),
