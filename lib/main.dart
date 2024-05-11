@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_auction_platform/data/web_socket/ws.dart';
 
 import 'dart:html' show window;
 

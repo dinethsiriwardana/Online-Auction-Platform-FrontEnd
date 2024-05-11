@@ -35,6 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
   String get _password => _passwordController.text;
 
   void _submit() async {
+    _emailController.text = "info@dineth.me";
+    _passwordController.text = "\$Studio0512";
+
     final bool emailisValid = EmailValidator.validate(_email);
     if (!emailisValid) {
       loginController.changeResponse('Add Correct Email');

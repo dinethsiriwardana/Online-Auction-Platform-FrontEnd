@@ -7,7 +7,7 @@ class ItemData {
   final double? startPrice;
   final String? createdAt;
   final String? expiredAt;
-  final dynamic? addedBy;
+  final dynamic addedBy;
 
   ItemData({
     this.id,

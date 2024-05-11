@@ -33,11 +33,17 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _addBidController.dispose();
+    super.dispose();
+  }
+
   void fetchData() async {
     print('Fetching Data');
     try {
       final response = await http.get(
-        Uri.parse("${Api.item}/${widget.id!}"),
+        Uri.parse("${Api.item}/${widget.id}"),
       );
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
@@ -49,7 +55,7 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
         print('Response Status Code: ${response.body}');
       }
     } catch (e, stackTrace) {
-      print('Error: $e');
+      print('Error fetchData: $e');
       print('Stack Trace: $stackTrace');
     }
   }
@@ -63,6 +69,9 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
       itemController.itemSubmitError('Add A Bid Greater Than $maxpaceBid');
       return;
     }
+    if (window.localStorage["token"] == null) {
+      return;
+    }
     try {
       final response = await http.post(
         Uri.parse(Api.bid),
@@ -71,7 +80,7 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
         },
         body: jsonEncode(<String, String>{
           "itemId": itemController.item.value.id.toString(),
-          "userId": "kiVJSMsNpS5igLtWKvxmHA==",
+          "userId": window.localStorage["token"] ?? "",
           "bidPrice": _addBid,
           "bidTime": DayTimeFormatter().formatLocalTime(DateTime.now())
         }),
@@ -127,7 +136,7 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
                           Column(
                             children: [
                               Text(
-                                "Reason Bids",
+                                "Reason Bids ${itemController.bids.isEmpty ? ' - No Bids' : ''}",
                                 style: TextStyle(fontSize: 30),
                               ),
 
@@ -207,9 +216,10 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
     return Column(
       children: [
         SizedBox(
-          height: 400,
+          // height: 380,
+          width: 380,
           child: Image.network(
-            'http://localhost:8080/apis/v1/file/image/3',
+            'http://localhost:8080/apis/v1/file/image/${itemController.item.value.id}',
           ),
         ),
       ],

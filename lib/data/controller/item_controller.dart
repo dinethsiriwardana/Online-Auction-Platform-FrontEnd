@@ -6,6 +6,7 @@ import 'package:online_auction_platform/data/model/bid_model.dart';
 import 'package:online_auction_platform/data/model/item_model.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:online_auction_platform/utl/dat_time_formatter.dart';
 
 class ItemController extends GetxController {
   final items = <ItemData>[].obs;
@@ -55,10 +56,9 @@ class ItemController extends GetxController {
         Uri.parse("${Api.aitembids}/${item.value.id}"),
       );
       if (response.statusCode == 200) {
-        if (response.body.isEmpty) {
-          return;
+        if (response.body.isNotEmpty) {
+          saveBids(jsonDecode(response.body));
         }
-        saveBids(jsonDecode(response.body));
       } else {
         print('Response Status Code: ${response.body}');
       }
@@ -69,6 +69,10 @@ class ItemController extends GetxController {
   }
 
   void saveBids(List<dynamic> bid) {
+    if (bid.isEmpty) {
+      bids.value = [];
+      return;
+    }
     bids.value = bid.map((json) => Bids.fromJson(json)).toList();
     maxbid.value = bids[0].bidPrice.toDouble();
   }
