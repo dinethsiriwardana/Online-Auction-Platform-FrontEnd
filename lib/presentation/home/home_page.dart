@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     itemController.fetchData();
+    itemController.maxBidsfetchData();
     super.initState();
   }
 
@@ -75,10 +76,6 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Container(
-              //   width: 15.w,
-              //   height: 300,
-              // ),
               SizedBox(
                 width: 60.w,
                 child: Padding(
@@ -89,9 +86,8 @@ class _HomePageState extends State<HomePage> {
                           itemCount: itemController.items.length,
                           itemBuilder: (context, index) {
                             final item = itemController.items[index];
+                            final maxbids = itemController.maxbids;
 
-                            print(DayTimeFormatter()
-                                .timeToDuration(item.expiredAt ?? ""));
                             return InkWell(
                               onTap: () {
                                 _showBidDialog(context, item.id.toString());
@@ -145,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             SizedBox(
-                                              width: 25.w,
+                                              width: 20.w,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -167,8 +163,9 @@ class _HomePageState extends State<HomePage> {
                                                       Text(
                                                           item.description ??
                                                               "",
-                                                          overflow:
-                                                              TextOverflow.fade,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 2,
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 20,
@@ -201,8 +198,6 @@ class _HomePageState extends State<HomePage> {
                                                           (BuildContext context,
                                                               Duration value,
                                                               Widget? child) {
-                                                        final days =
-                                                            value.inDays;
                                                         final hours = value
                                                             .inHours
                                                             .remainder(24);
@@ -212,7 +207,10 @@ class _HomePageState extends State<HomePage> {
                                                         final seconds = value
                                                             .inSeconds
                                                             .remainder(60);
-                                                        if (days >= 1) {
+                                                        if (value.inDays > 0) {
+                                                          final days = value
+                                                              .inDays
+                                                              .remainder(365);
                                                           return countDown(
                                                               "${days.toString().padLeft(2, '0')} ${days == 1 ? "Day" : "Days"} Left");
                                                         }
@@ -231,10 +229,21 @@ class _HomePageState extends State<HomePage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
+                                                  maxbids[item.id.toString()] !=
+                                                          null
+                                                      ? Text(
+                                                          "\$${(maxbids[item.id.toString()]["bidPrice"]) ?? item.startPrice}.00 ",
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 50,
+                                                                  color: Colors
+                                                                      .black),
+                                                        )
+                                                      : SizedBox(),
                                                   Text(
-                                                    "\$${item.startPrice}.00",
+                                                    "Start Price : \$${item.startPrice}.00",
                                                     style: const TextStyle(
-                                                        fontSize: 50,
+                                                        fontSize: 20,
                                                         color: Colors.black),
                                                   ),
                                                   Container(
@@ -270,6 +279,129 @@ class _HomePageState extends State<HomePage> {
                                                 ])
                                           ],
                                         ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )),
+                ),
+              ),
+              SizedBox(
+                width: 400,
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Obx(() => itemController.itemsexpired.isEmpty
+                      ? const CircularProgressIndicator()
+                      : ListView.builder(
+                          itemCount: itemController.itemsexpired.length,
+                          itemBuilder: (context, index) {
+                            final item = itemController.itemsexpired[index];
+                            final maxbids = itemController.maxbids;
+
+                            return InkWell(
+                              onTap: () {
+                                _showBidDialog(context, item.id.toString());
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(12),
+                                padding: const EdgeInsets.all(10),
+                                height: 400,
+                                //rounded corners
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  //shadow
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 0),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 400,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        // background img
+                                        color: Colors.blue,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            'http://localhost:8080/apis/v1/file/image/${item.id}',
+                                          ),
+                                          fit: BoxFit.cover,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      //max width
+
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                    //red color box with rounded coners
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    padding: EdgeInsets.all(10),
+                                                    child:
+                                                        countDown("Expired")),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(item.name ?? "",
+                                                        style: const TextStyle(
+                                                            fontSize: 35,
+                                                            color:
+                                                                Colors.black)),
+                                                  ],
+                                                ),
+                                                maxbids[item.id.toString()] !=
+                                                        null
+                                                    ? Text(
+                                                        "\$${(maxbids[item.id.toString()]["bidPrice"]) ?? item.startPrice}.00 ",
+                                                        style: const TextStyle(
+                                                            fontSize: 40,
+                                                            color:
+                                                                Colors.black),
+                                                      )
+                                                    : Text(
+                                                        "No Bids",
+                                                        style: const TextStyle(
+                                                            fontSize: 40,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],

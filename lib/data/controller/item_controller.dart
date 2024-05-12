@@ -10,12 +10,35 @@ import 'package:online_auction_platform/utl/dat_time_formatter.dart';
 
 class ItemController extends GetxController {
   final items = <ItemData>[].obs;
+  final itemsexpired = <ItemData>[].obs;
   final bids = <Bids>[].obs;
 
   final itemsubmiterr = ''.obs;
   final item = ItemData().obs;
+  final maxbids = {}.obs;
 
   final maxbid = 0.0.obs;
+
+  void maxBidsfetchData() async {
+    print('Fetching Data');
+    try {
+      final response = await http.get(
+        Uri.parse(Api.maxBid),
+      );
+      if (response.statusCode == 200) {
+        if (response.body.isEmpty) {
+          return;
+        }
+        //to map
+        maxbids.value = jsonDecode(response.body);
+      } else {
+        print('Response Status Code: ${response.body}');
+      }
+    } catch (e, stackTrace) {
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
+    }
+  }
 
   void fetchData() async {
     print('Fetching Data');
@@ -37,8 +60,26 @@ class ItemController extends GetxController {
     }
   }
 
-  void saveItems(List<dynamic> item) {
-    items.value = item.map((json) => ItemData.fromJson(json)).toList();
+  void saveItems(List<dynamic> itemsList) {
+// Convert the list of dynamic objects to a list of ItemData objects
+    List<ItemData> mapeditems =
+        itemsList.map((item) => ItemData.fromJson(item)).toList();
+
+    // Separate items into those that are expired and those that are not
+    mapeditems.forEach((item) {
+      DateTime now = DateTime.now();
+      DateTime itemExpiredDate = DateTime.parse(item.expiredAt ?? '');
+
+      // Check if the item has expired
+      bool isExpired = now.isAfter(itemExpiredDate);
+
+      // Add the item to the appropriate list based on its expiration status
+      if (isExpired) {
+        itemsexpired.add(item);
+      } else {
+        items.add(item);
+      }
+    });
   }
 
   void itemSubmitError(String error) {

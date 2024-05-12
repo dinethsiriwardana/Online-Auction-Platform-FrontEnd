@@ -22,13 +22,8 @@ class _LandinPageState extends State<LandinPage> {
   @override
   Widget build(BuildContext context) {
     if (window.localStorage["token"] == null) {
-      //Load Login Screen
       return const LoginScreen();
     } else {
-      // return const Scaffold(
-      //   body: SingleItemScreen(id: '3'),
-      //   // backgroundColor: const Color.fromARGB(255, 43, 43, 43),
-      // );
       return HomePage();
     }
   }

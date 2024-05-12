@@ -11,4 +11,6 @@ class Api {
 
   static const String bid = '${baseUrl}bid';
   static const String aitembids = '${baseUrl}bid';
+
+  static const String maxBid = '${baseUrl}bid/highest';
 }

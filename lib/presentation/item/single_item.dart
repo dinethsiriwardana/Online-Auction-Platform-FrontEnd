@@ -94,6 +94,13 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
     }
   }
 
+  bool isExpired() {
+    DateTime now = DateTime.now();
+    DateTime itemExpiredDate =
+        DateTime.parse(itemController.item.value.expiredAt ?? '');
+    return now.isAfter(itemExpiredDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -103,61 +110,69 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
         child: Obx(
           () => itemController.item.value.id == null
               ? SizedBox()
-              : Column(
-                  children: [
-                    SizedBox(
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ItemImg(),
-                          SizedBox(
-                            height: 400,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [ItemDetails(), AddBidButton()],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                "Reason Bids ${itemController.bids.isEmpty ? ' - No Bids' : ''}",
-                                style: TextStyle(fontSize: 30),
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 800,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ItemImg(),
+                            SizedBox(
+                              height: 400,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  ItemDetails(),
+                                  !isExpired()
+                                      ? AddBidButton()
+                                      : const SizedBox(),
+                                ],
                               ),
-
-                              //foreach for list of bids
-                              itemController.bids.isEmpty
-                                  ? const SizedBox()
-                                  : Column(
-                                      children: itemController.bids
-                                          .map((bid) => resonBid(
-                                              bid.userId.toString(),
-                                              bid.bidPrice,
-                                              bid.bidTime))
-                                          .take(5)
-                                          .toList(),
-                                    ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        width: 800,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Recent Bids ${itemController.bids.isEmpty ? ' - No Bids' : ''}",
+                                  style: TextStyle(fontSize: 30),
+                                ),
+
+                                //foreach for list of bids
+                                itemController.bids.isEmpty
+                                    ? const SizedBox()
+                                    : Column(
+                                        children: itemController.bids
+                                            .map((bid) => resonBid(
+                                                bid.userId.toString(),
+                                                bid.bidPrice,
+                                                bid.bidTime))
+                                            .take(5)
+                                            .toList(),
+                                      ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
         ),
       ),
