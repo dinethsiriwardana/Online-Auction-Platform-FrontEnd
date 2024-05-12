@@ -100,23 +100,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Container(
             // bg : f7f4ed
 
-            color: const Color(0xffF7F4ED),
+            color: Colors.white,
             height: 100.h,
             width: 100.w,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 100.h,
-                      width: 50.w,
-                      // child: Lottie.asset('assets/lottie/login.json'),
-                    )
-                  ],
-                ),
                 Column(
                   children: [
                     SizedBox(
@@ -130,8 +123,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             style: TextStyle(
                                 fontSize: 16.sp, fontWeight: FontWeight.bold),
                           ),
+                          SizedBox(
+                            height: 200,
+                            child: Image.asset('/bg.jpg'),
+                          ),
                           const SizedBox(
-                            height: 300,
+                            height: 20,
                           ),
                           Obx(() => loginController.response.value == ''
                               ? const SizedBox()

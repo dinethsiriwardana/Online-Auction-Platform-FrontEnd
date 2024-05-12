@@ -75,23 +75,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Container(
             // bg : f7f4ed
 
-            color: const Color(0xffF7F4ED),
+            color: Colors.white,
             height: 100.h,
             width: 100.w,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 100.h,
-                      width: 50.w,
-                      // child: Lottie.asset('assets/lottie/login.json'),
-                    )
-                  ],
-                ),
+                // Column(
+                //   children: [
+                //     SizedBox(
+                //       height: 100.h,
+                //       width: 50.w,
+                //       child: Lottie.asset('assets/lottie/login.json'),
+                //     )
+                //   ],
+                // ),
                 Column(
                   children: [
                     SizedBox(
@@ -107,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           SizedBox(
                             height: 300,
+                            child: Image.asset('/bg.jpg'),
                           ),
                           EmailInput(),
                           const SizedBox(

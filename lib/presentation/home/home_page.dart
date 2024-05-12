@@ -81,7 +81,11 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: Obx(() => itemController.items.isEmpty
-                      ? const CircularProgressIndicator()
+                      ? SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: const CircularProgressIndicator(),
+                        )
                       : ListView.builder(
                           itemCount: itemController.items.length,
                           itemBuilder: (context, index) {
@@ -294,7 +298,11 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: Obx(() => itemController.itemsexpired.isEmpty
-                      ? const CircularProgressIndicator()
+                      ? SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: const CircularProgressIndicator(),
+                        )
                       : ListView.builder(
                           itemCount: itemController.itemsexpired.length,
                           itemBuilder: (context, index) {

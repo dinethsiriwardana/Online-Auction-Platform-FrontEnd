@@ -51,6 +51,9 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
         }
         itemController.showSingleItem(jsonDecode(response.body));
         itemController.fetchBidData();
+        _addBidController.text = itemController.maxbid.value.toString() == "0"
+            ? itemController.item.value.startPrice.toString()
+            : itemController.maxbid.value.toString();
       } else {
         print('Response Status Code: ${response.body}');
       }
