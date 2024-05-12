@@ -291,46 +291,46 @@ class _SingleItemScreenState extends State<SingleItemScreen> {
     );
   }
 
-  SizedBox emailInput() {
-    return SizedBox(
-      width: 250.0,
-      height: 55.0,
-      child: TextField(
-        controller: _addBidController,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
-        ],
-        decoration: const InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2.0,
+  Widget emailInput() {
+    return Obx(() => SizedBox(
+          width: 250.0,
+          height: 55.0,
+          child: TextField(
+            controller: _addBidController,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.blue,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15.0),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 216, 122, 0),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15.0),
+                ),
+              ),
+              hintText: itemController.maxbid.value.toString(),
+              labelText: 'Add a Bid',
+              hintStyle: TextStyle(
+                fontSize: 15,
+              ),
+              labelStyle: TextStyle(
+                fontSize: 15,
+              ),
             ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(15.0),
-            ),
+            onChanged: (paceBid) => _updateState(paceBid),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Color.fromARGB(255, 216, 122, 0),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          hintText: 'Add A Bid',
-          labelText: 'Add a Bid',
-          hintStyle: TextStyle(
-            fontSize: 15,
-          ),
-          labelStyle: TextStyle(
-            fontSize: 15,
-          ),
-        ),
-        onChanged: (paceBid) => _updateState(paceBid),
-      ),
-    );
+        ));
   }
 
   _updateState(paceBid) {

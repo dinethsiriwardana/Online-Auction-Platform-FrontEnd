@@ -94,7 +94,6 @@ class _AddBidScreenState extends State<AddBidScreen> {
           xhr.open(
               'POST', Api.file); // Use the same API URL as for the item data
           xhr.send(formData);
-          itemController.fetchData();
 
           xhr.onLoad.listen((event) {
             if (xhr.status == 200) {
